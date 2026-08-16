@@ -28,8 +28,8 @@ Opens at `http://localhost:8501`. Six tabs in the sidebar: **Overview**,
 **Service**, **Inventory & Returns**, **Cold Chain**, **Freight & Price**,
 **Divya's Questions**.
 
-That's the whole cold start. No other setup is required to see real, live
-numbers computed from the database.
+That's the cold start for everything except live freight data, which needs
+one more step (a separate process), covered next.
 
 ---
 
@@ -115,6 +115,7 @@ button needed.
 │                               #   metric before it went into the app.
 │                               #   Not imported by app.py, kept for reference
 ├── data/kestrel_ops.db          # The database (not committed; supply separately)
+├── requirements.txt              # streamlit, pandas, requests, fastapi, uvicorn
 ├── DECISIONS.md                 # Read this first
 └── README.md                    # This file
 ```
