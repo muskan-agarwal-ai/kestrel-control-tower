@@ -58,14 +58,19 @@ instruction. Fill rate is reported in eaches everywhere except one place
 5. Schedule the freight pull as a cached nightly job, not a live per-click one.
 
 ## What breaks first in production
+- **This runs on SQLite: a single-file, single-writer database with no
+  built-in replication or connection pooling.** Fine for a demo at ~820K
+  order lines and one user; a real deployment with concurrent users needs a
+  proper multi-user database (Postgres) before that becomes a problem, not
+  after. Several queries also do full joins with no indexes defined; fine
+  today, not at 100x the data.
 - **`app.py` and `metrics.py` duplicate queries independently** rather than
   sharing code. Found directly: a bug fix in `metrics.py` didn't take
   effect in the dashboard because `app.py` had its own separate copy of the
   same query, requiring the fix twice. The single most likely source of the
   next silent inconsistency.
-- **The freight pull has no cross-session cache.** Every click re-walks
-  ~7,100 invoices live; fine at current volume, not at real usage scale.
-- **Competitor matching is regex against raw HTML**, with no schema
-  versioning, so a markup change on the source site breaks it silently.
-- **Hard-coded test-outlet exclusions** (3 known IDs) are a snapshot of
-  today's data, not a durable rule.
+- **The freight pull has no cross-session cache**; every click re-walks
+  ~7,100 invoices live. Fine at current volume, not at real usage scale.
+- **Competitor matching is regex against raw HTML with no schema
+  versioning, and test-outlet exclusions are 3 hard-coded IDs**, a snapshot
+  of today's data rather than a durable rule.
