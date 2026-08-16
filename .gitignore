@@ -1,0 +1,4 @@
+data/kestrel_ops.db
+data/csv/
+__pycache__/
+*.pyc
